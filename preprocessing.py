@@ -1,7 +1,6 @@
 from multiprocessing import Pool, Queue
 import os
 import sys
-import glob
 
 def process(queue):
     while not queue.empty():
