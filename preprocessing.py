@@ -14,8 +14,6 @@ def process(queue):
                     result.write(line)
         searchfile.close()
 
-#def Queue():
-
 if __name__ == '__main__':
     searchString = input('Enter string to search: ')
     queue = Queue()
