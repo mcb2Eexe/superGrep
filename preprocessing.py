@@ -1,6 +1,7 @@
 # - supergrep V1
-# - McB
-# - 20190201
+# - Written by: McB
+# - Date written: 01 Feb 2019
+# - Last modified: 01 Feb 2019
 # - Designed to search multiple large text files for a simple string match
 # - Uses multiprocessing to search multiple files concurrently
 # - To do's = add regex string searching, add counter to display total files to be searched, no of files remaing and number of matches
