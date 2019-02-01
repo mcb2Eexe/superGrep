@@ -1,3 +1,10 @@
+# - supergrep V1
+# - McB
+# - 20190201
+# - Designed to search multiple large text files for a simple string match
+# - Uses multiprocessing to search multiple files concurrently
+# - To do's = add regex string searching, add counter to display total files to be searched, no of files remaing and number of matches
+
 from multiprocessing import Pool, Queue
 import os
 import sys
