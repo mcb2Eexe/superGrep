@@ -1,24 +1,28 @@
 # - supergrep V1
 # - Written by: McB
-# - Date written: 01 Feb 2019
-# - Last modified: 01 Feb 2019
+# - Last modified: 02 Feb 2019
 # - Designed to search multiple large text files for a simple string match
 # - Uses multiprocessing to search multiple files concurrently
-# - To do's = add regex string searching, add counter to display total files to be searched, no of files remaing and number of matches
+# - To do's = add regex searching,
+# - To do's = add counters for total files, files remaining, number of matches
+# - Add Windows support (currently Linux only)
 
 from multiprocessing import Pool, Queue
 import os
-import sys
+import multiprocessing
 
 def process(queue):
     while not queue.empty():
+        dir = 'results'
+        if not os.path.exists(dir):
+            os.makedirs(dir)
         filename = queue.get()
+        print(multiprocessing.current_process())
         print(filename)
         searchfile = open(filename, 'r')
         for line in searchfile:
             if searchString in line:
-                print(line)
-                with open("results.txt", "a+") as result:
+                with open("results/results.txt", "a+") as result:
                     result.write(line)
         searchfile.close()
 
@@ -27,9 +31,9 @@ if __name__ == '__main__':
     queue = Queue()
     for f in os.listdir('.'):
         if f.endswith('.txt'):
-            print(f)
             queue.put(f)
     pool = Pool(None, process, (queue,))
-
     pool.close()
     pool.join()
+
+
