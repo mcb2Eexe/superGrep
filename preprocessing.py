@@ -13,9 +13,9 @@ import multiprocessing
 
 def process(queue):
     while not queue.empty():
-        dir = 'results'
+        dir1 = 'results'
         if not os.path.exists(dir):
-            os.makedirs(dir)
+            os.makedirs(dir1)
         filename = queue.get()
         print(multiprocessing.current_process())
         print(filename)
