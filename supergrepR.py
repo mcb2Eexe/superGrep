@@ -1,7 +1,6 @@
 # - supergrepR V1
 # - Written by: McB
-# - Date written: 01 Feb 2019
-# - Last modified: 01 Feb 2019
+# - Last modified: 03 Feb 2019
 # - Designed to search multiple large text files using regex
 # - Uses multiprocessing to search multiple files concurrently
 # - To do's = add counters for total files, files remaining, number of matches
@@ -21,9 +20,7 @@ def process(queue):
         filename = queue.get()
         print(multiprocessing.current_process())
         print(filename)
-        print('sS= ', searchString)
         regex = re.compile('{}'.format(searchString))
-        print(regex)
         searchfile = open(filename, 'r')
         for line in searchfile:
             if regex.search(line) is not None:
