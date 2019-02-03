@@ -11,6 +11,7 @@ from multiprocessing import Pool, Queue
 import os
 import multiprocessing
 
+
 def process(queue):
     while not queue.empty():
         dir1 = 'results'
@@ -26,6 +27,7 @@ def process(queue):
                     result.write(line)
         searchfile.close()
 
+        
 if __name__ == '__main__':
     searchString = input('Enter string to search: ')
     queue = Queue()
@@ -35,5 +37,4 @@ if __name__ == '__main__':
     pool = Pool(None, process, (queue,))
     pool.close()
     pool.join()
-
 
