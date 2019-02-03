@@ -39,3 +39,4 @@ if __name__ == '__main__':
     pool = Pool(None, process, (queue,))
     pool.close()
     pool.join()
+    
