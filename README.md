@@ -25,7 +25,7 @@ Points to note:
 Installation:
 
   - Edit first line to match the version of Python3.* you are currently running, 
-  - Drop the file into a location that is included in your $PATH (use cmd "echo $PATH" to display if needed),
+  - Change the script name to "superGrep" and drop it into a location that is included in your $PATH (use cmd "echo $PATH" to display if needed),
   - Ensure script is executable (use cmd "sudo chmod +x superGrep"),
   - Run from any location within a shell terminal by typing the cmd "superGrep" followed by the relevant arguments.
   
