@@ -19,7 +19,7 @@ Points to note:
 
   - The results are stored in memory until all searchers are complete,
   - There is no support included for Windows systems at this time (there was issues with how Windows handled the multiprocessing), 
-  - Regex searches are pre-compiled so escaping characters must be double-slashed (\\),
+  - Regex searches are pre-compiled so escaping characters must be double-slashed (\\\),
   - Single file's must be processed with -f (in development).
   
 Installation:
