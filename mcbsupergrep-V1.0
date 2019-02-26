@@ -4,7 +4,7 @@
 # - Last modified: 26 Feb 2019
 # - Designed for increased efficiency when regex searching large data on linux systems,
 # - Uses multiprocessing to search multiple files concurrently or a single file in chunks,
-# - Tested on Ubuntu 16.10 with python3.5
+# - Tested on Ubuntu 16.10 with python3.5 on text files.
 
 
 from multiprocessing import Pool, Queue
