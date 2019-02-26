@@ -1,0 +1,163 @@
+#! /usr/bin/env python3.5
+# - superGrep V1.0
+# - Written by: McB
+# - Last modified: 26 Feb 2019
+# - Designed for increased efficiency when regex searching large data on linux systems,
+# - Uses multiprocessing to search multiple files concurrently or a single file in chunks,
+# - Tested on Ubuntu 16.10 with python3.5
+
+
+from multiprocessing import Pool, Queue
+import multiprocessing as mp
+import subprocess as sp
+import argparse
+import ntpath
+import shutil
+import sys
+import os
+import re
+
+
+def processDir(queue):
+    while not queue.empty():
+        filename = queue.get()
+        print(mp.current_process())
+        print(filename)
+        searchfile = open(filename, encoding='ISO-8859-1',errors='backslashreplace', mode='r')
+        for line in searchfile:
+            if regex.search(line) is not None:
+                results.append(line)
+        searchfile.close()
+    resultsDir()
+    with open("superGrepResults/results.txt", encoding='ISO-8859-1', mode='a+') as result:
+        for item in results:
+            result.write(item)
+
+
+def processFile(cStart, cSize):
+    with open(workingFile, encoding='ISO-8859-1',errors='backslashreplace', mode='r') as f:
+        f.seek(cStart)
+        lines = f.read(cSize).splitlines()
+        for line in lines:
+            if regex.search(line) is not None:
+                results.append(line)
+    resultsDir()
+    with open("superGrepResults/results.txt", encoding='ISO-8859-1', mode='a+') as result:
+        for item in results:
+            result.write(item)
+
+
+def chunkFile(workingFile,cSize=1024*1024):
+    fEnd = os.path.getsize(workingFile)
+    with open(workingFile,'rb') as f:
+        cEnd = f.tell()
+        while True:
+            cStart = cEnd
+            f.seek(cSize,1)
+            f.readline()
+            cEnd = f.tell()
+            yield cStart, cEnd - cStart
+            if cEnd >= fEnd:
+                break
+
+
+def helpMenu():
+    parser = argparse.ArgumentParser(
+        description='McB\'s superGrep! regex searching using multiprocessing',
+        epilog="Spice up your search life <3")
+    parser.add_argument('-f', help="Search a single file.")
+    parser.add_argument('-d', help="Search all files in a given directory.")
+    parser.print_help()
+    parser.parse_args()
+
+
+def error(errorString):
+    tmp = sp.call('clear', shell=True)
+    print(errorString)
+    print("")
+    helpMenu()
+    exit(0)
+
+
+def resultsDir():
+    if os.path.exists(dir1):
+        shutil.rmtree(dir1)
+        os.makedirs(dir1)
+    else:
+        os.makedirs(dir1)
+
+
+# - Start
+
+
+if __name__ == '__main__':
+    results = []
+    dir1 = 'superGrepResults'
+    if len(sys.argv) != 3:
+        errorString = "Unexpected input, Check help and try again."
+        error(errorString)
+    if sys.argv[1] == "-d":
+        workingDir = sys.argv[2]
+        try:
+            os.chdir(workingDir)
+        except:
+            errorString = "Directory not found, check and try again"
+            error(errorString)
+        count = (len(os.listdir(".")))
+        if count == 1:
+            print("Warning - escaping characters needs double slashes")
+            searchString = input('Input regex search: ')
+            regex = re.compile('{}'.format(searchString))
+            queue = Queue()
+            for dpaths, sdirs, files in os.walk('.'):
+                for file in files:
+                    if file.endswith(".txt"):
+                        filepath = os.path.join(dpaths, file)
+                        queue.put(filepath)
+            pool = Pool(None, processDir, (queue,))
+            pool.close()
+            pool.join()
+        else:
+            tmp = sp.call('clear', shell=True)
+            errorString = "Unauthorised use of -d, use -f for a single file."
+            error(errorString)
+    elif sys.argv[1] == "-f":
+        workingInput = sys.argv[2]
+        if "/" in workingInput:
+            splitPath = ()
+            splitPath = ntpath.split(workingInput)
+            workingPath = splitPath[0]
+            workingFile = splitPath[1]
+            try:
+                os.chdir(workingPath)
+            except:
+                errorString = "Directory not Found, check and try again."
+                error(errorString)
+        else:
+            workingFile = workingInput
+        try:
+            os.path.isfile(workingFile)
+        except:
+            errorString = "File not found, check and try again"
+            error(errorString)
+        print("Warning - escaping characters needs double slashes")
+        searchString = input('Input regex search: ')
+        regex = re.compile('{}'.format(searchString))
+        fStats = os.stat(workingFile)
+        fSize = fStats.st_size
+        cpuCount = mp.cpu_count()
+        pool = mp.Pool(cpuCount)
+        jobs = []
+        tmp = sp.call('clear', shell=True)
+        print("Processing...")
+        for cStart,cSize in chunkFile(workingFile):
+            jobs.append(pool.apply_async(processFile(cStart,cSize)))
+        pool.close()
+        pool.join()
+    else:
+        errorString = "Unexpected input, Check help and try again."
+        error(errorString)
+tmp = sp.call('clear',shell=True)
+print("Search Complete, Results in superGrepResults directory.")
+print('')
+exit()
